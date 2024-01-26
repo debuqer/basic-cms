@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    app:
+        build:
+            context: ./dockerfiles/fpm
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/usr/src/app
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app_network
+        user:
+            "${UID}:1000"
+    mysql:
+        image: mysql:latest
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - app_network
+        environment:
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            SERVICE_TAGS: "dev"
+            SERVICE_NAME: "mysql"
+    nginx:
+        image: nginx:latest
+        networks:
+            - app_network
+        volumes:
+            - ./dockerfiles/nginx/conf/:/etc/nginx/conf.d/
+            - logs:/var/log/nginx
+            - ./public:/var/www/app/public
+        ports:
+            - "${APP_PORT}:80"
+        links:
+            - app
+volumes:
+    dbdata:
+        driver: local
+    logs:
+        driver: local
+networks:
+    app_network:
+        driver: bridge
+
