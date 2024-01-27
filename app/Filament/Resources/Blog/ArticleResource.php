@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Blog;
 
+use App\Domain\Blog\Constants\ArticleStatus;
 use App\Filament\Resources\Blog\ArticleResource\Pages;
 use App\Filament\Resources\Blog\ArticleResource\RelationManagers;
 use App\Models\Blog\Article;
@@ -12,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ArticleResource extends Resource
 {
@@ -36,6 +38,8 @@ class ArticleResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('content')->words(10),
+                Tables\Columns\TextColumn::make('status')->getStateUsing(fn(Model $record) => ArticleStatus::from($record->status)->name),
+                Tables\Columns\TextColumn::make('published_at')->date('Y/m/d')
             ])
             ->filters([
                 //
