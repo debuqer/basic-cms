@@ -2,6 +2,7 @@ version: '3'
 
 services:
     app:
+        container_name: "blog_app"
         build:
             context: ./dockerfiles/fpm
             dockerfile: Dockerfile
@@ -18,6 +19,7 @@ services:
         user:
             "${UID}:1000"
     mysql:
+        container_name: "blog_db"
         image: mysql:latest
         volumes:
             - dbdata:/var/lib/mysql
@@ -36,6 +38,7 @@ services:
         expose:
             - "3306"
     nginx:
+        container_name: "blog_nginx"
         image: nginx:latest
         networks:
             - app_network

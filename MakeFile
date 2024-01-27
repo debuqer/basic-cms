@@ -1,0 +1,29 @@
+build:
+	echo "++ build containers"
+	docker-compose build
+
+up:
+	echo "++ up containers"
+	docker-compose up --build
+
+install:
+	echo "++  composer"
+	docker exec blog_app composer install
+
+	echo "++ migrating database"
+	docker exec blog_app php artisan migrate
+
+
+clean-and-seed:
+	docker exec blog_app php artisan migrate:fresh
+
+	echo "++ seeding database"
+	docker exec blog_app php artisan db:seed
+
+	echo "++ creating users"
+	docker exec blog_app php artisan make:filament-user --name=admin --email=admin@local.dev --password=password
+	docker exec blog_app php artisan make:filament-user --name=author --email=author@local.dev --password=password
+
+test:
+	echo "++ start testing"
+	docker exec blog_app ./vendor/bin/phpunit
