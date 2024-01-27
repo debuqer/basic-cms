@@ -20,5 +20,6 @@ class Article extends Model
         'created_at',
         'deleted_at',
         'deleted_by',
+        'published_at',
     ];
 }
