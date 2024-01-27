@@ -6,10 +6,6 @@ use App\Domain\Blog\BlogRepositoryInterface;
 use App\Domain\Blog\Constants\ArticleStatus;
 use App\Infrastructure\Database\UUID4KeyGenerator;
 use App\Models\Blog\Article;
-use App\Services\Blog\DTOs\ApproveArticleDTO;
-use App\Services\Blog\DTOs\CreateArticleDTO;
-use App\Services\Blog\DTOs\DeleteArticleDTO;
-use App\Services\Blog\DTOs\UpdateArticleDTO;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,33 +18,32 @@ class BlogService
 
     }
 
-    public function createPost(CreateArticleDTO $dto): Article
+    public function createArticle(array $data): Article
     {
-        $article = new Article();
-        $article->setRawAttributes([
+        return $this->blogRepository->create([
             'id' => $this->keyGenerator->new(),
-            'title' => $dto->getTitle(),
-            'content' => $dto->getContent(),
+            'title' => $data['title'],
+            'content' => $data['content'],
             'author_id' => Auth::user()->getAuthIdentifier(),
             'status' => ArticleStatus::Draft->value,
             'created_at' => Carbon::now(),
         ]);
-
-        return $this->blogRepository->save($article);
     }
 
-    public function updatePost(UpdateArticleDTO $dto)
+    public function updateArticle(string $id, array $data): Article
     {
-
+        return $this->blogRepository->update(id: $id, data: $data);
     }
 
-    public function approveDraft(ApproveArticleDTO $dto)
+    public function approveDraft(string $id,): void
     {
-
+        $this->blogRepository->update(id: $id, data: [
+            'status' => ArticleStatus::Published,
+        ]);
     }
 
-    public function deleteArticle(DeleteArticleDTO $dto)
+    public function deleteArticle(string $id): bool
     {
-
+        return $this->blogRepository->delete(id: $id);
     }
 }

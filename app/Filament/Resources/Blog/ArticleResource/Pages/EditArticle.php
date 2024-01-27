@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Blog\ArticleResource\Pages;
 
 use App\Filament\Resources\Blog\ArticleResource;
-use Filament\Actions;
+use App\Services\Blog\BlogService;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class EditArticle extends EditRecord
 {
@@ -13,7 +15,12 @@ class EditArticle extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make()
         ];
+    }
+
+    public function handleRecordUpdate(Model $record, array $data): Model
+    {
+        return App::make(BlogService::class)->updateArticle(id: $record->getKey(), data: $data);
     }
 }

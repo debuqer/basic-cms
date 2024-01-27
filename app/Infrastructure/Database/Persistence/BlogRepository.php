@@ -8,23 +8,23 @@ use App\Models\Blog\Article;
 class BlogRepository implements BlogRepositoryInterface
 {
 
-    public function save(Article $article): Article
+    public function create(array $data): Article
     {
-        return Article::updateOrCreate([
-                'id' => $article->id,
-            ], [
-            'title' => $article->title,
-            'content' => $article->content,
-            'status' => $article->status,
-            'author_id' => $article->author_id,
-            'created_at' => $article->created_at,
-            'deleted_by' => $article->created_by,
-            'deleted_at' => $article->deleted_at,
-        ]);
+        return Article::create($data);
     }
 
-    public function delete(string $id)
+
+    public function update(string $id, array $data): Article
     {
-        // TODO: Implement delete() method.
+        $article = Article::find($id);
+        $article->update($data);
+
+        return $article;
     }
+
+    public function delete(string $id): bool
+    {
+        return Article::where('id', $id)->delete();
+    }
+
 }

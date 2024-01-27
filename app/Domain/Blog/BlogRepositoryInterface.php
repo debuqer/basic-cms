@@ -7,7 +7,9 @@ use App\Models\Blog\Article;
 
 interface BlogRepositoryInterface
 {
-    public function save(Article $article): Article;
+    public function create(array $data): Article;
 
-    public function delete(string $id);
+    public function update(string $id, array $data): Article;
+
+    public function delete(string $id): bool;
 }
