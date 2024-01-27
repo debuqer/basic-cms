@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Blog\BlogRepositoryInterface;
+use App\Framework\Database\NonIncrementalKey;
+use App\Infrastructure\Database\Persistence\BlogRepository;
+use App\Infrastructure\Database\UUID4KeyGenerator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(NonIncrementalKey::class, UUID4KeyGenerator::class);
+        $this->app->bind(BlogRepositoryInterface::class, BlogRepository::class);
     }
 
     /**
