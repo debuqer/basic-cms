@@ -2,6 +2,7 @@
 
 namespace App\Models\Blog;
 
+use App\Domain\Blog\Constants\ArticleStatus;
 use App\Framework\Model\Concerns\HasUUIDKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,4 +23,14 @@ class Article extends Model
         'deleted_by',
         'published_at',
     ];
+
+    public function drafted(): bool
+    {
+        return $this->status === ArticleStatus::Draft->value;
+    }
+
+    public function published(): bool
+    {
+        return $this->status === ArticleStatus::Published->value;
+    }
 }

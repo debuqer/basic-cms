@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Blog;
 
 use App\Domain\Blog\Constants\ArticleStatus;
 use App\Filament\Resources\Blog\ArticleResource\Pages;
+use App\Filament\Resources\Blog\Tables\Actions\DraftAction;
+use App\Filament\Resources\Blog\Tables\Actions\PublishAction;
 use App\Models\Blog\Article;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -48,6 +50,8 @@ class ArticleResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                PublishAction::make(),
+                DraftAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -35,10 +35,19 @@ class BlogService
         return $this->blogRepository->update(id: $id, data: $data);
     }
 
-    public function approveDraft(string $id,): void
+    public function publishArticle(string $id,): void
     {
         $this->blogRepository->update(id: $id, data: [
             'status' => ArticleStatus::Published,
+            'published_at' => Carbon::now(),
+        ]);
+    }
+
+    public function draftArticle(string $id,): void
+    {
+        $this->blogRepository->update(id: $id, data: [
+            'status' => ArticleStatus::Draft,
+            'published_at' => null,
         ]);
     }
 
