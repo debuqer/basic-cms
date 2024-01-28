@@ -42,7 +42,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('content')->words(10),
                 Tables\Columns\TextColumn::make('status')->getStateUsing(fn(Model $record) => ArticleStatus::from($record->status)->name),
-                Tables\Columns\TextColumn::make('published_at')->date('Y/m/d')
+                Tables\Columns\TextColumn::make('published_at')->date('Hd/m/y H:i')
             ])
             ->filters([
                 //
