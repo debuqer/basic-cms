@@ -19,7 +19,7 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->softDeletes();
             $table->uuid('deleted_by')->nullable();
-            $table->timestamp('published_at');
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('no action');
