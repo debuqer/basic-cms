@@ -4,7 +4,7 @@ build:
 
 up:
 	echo "++ up containers"
-	docker-compose up --build
+	docker-compose up
 
 install:
 	echo "++  composer"
@@ -23,6 +23,9 @@ clean-and-seed:
 	echo "++ creating users"
 	docker exec blog_app php artisan make:filament-user --name=admin --email=admin@local.dev --password=password
 	docker exec blog_app php artisan make:filament-user --name=author --email=author@local.dev --password=password
+
+	echo "++ set default roles"
+	docker exec blog_app php artisan app:assign-roles-command
 
 test:
 	echo "++ start testing"
