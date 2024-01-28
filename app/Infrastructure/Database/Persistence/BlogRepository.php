@@ -27,4 +27,9 @@ class BlogRepository implements BlogRepositoryInterface
         return Article::where('id', $id)->delete();
     }
 
+    public function restore(string $id): bool
+    {
+        return Article::withTrashed()->find('id', $id)->restore();
+    }
+
 }

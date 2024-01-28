@@ -12,4 +12,6 @@ interface BlogRepositoryInterface
     public function update(string $id, array $data): Article;
 
     public function delete(string $id): bool;
+
+    public function restore(string $id): bool;
 }

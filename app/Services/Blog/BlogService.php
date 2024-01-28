@@ -55,4 +55,9 @@ class BlogService
     {
         return $this->blogRepository->delete(id: $id);
     }
+
+    public function restoreArticle(string $id): bool
+    {
+        return $this->blogRepository->restore(id: $id);
+    }
 }
