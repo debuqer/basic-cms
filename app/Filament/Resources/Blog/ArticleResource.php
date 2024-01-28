@@ -30,8 +30,8 @@ class ArticleResource extends Resource
         return $form
             ->schema([
                 Section::make('Let\'s post something')->schema([
-                    TextInput::make('title'),
-                    Textarea::make('content'),
+                    TextInput::make('title')->label('title'),
+                    Textarea::make('content')->label('content'),
                 ]),
             ]);
     }

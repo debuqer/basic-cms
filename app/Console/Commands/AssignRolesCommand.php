@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Domain\User\Constants\UserRole;
 use App\Models\Blog\Article;
+use App\Models\User\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
