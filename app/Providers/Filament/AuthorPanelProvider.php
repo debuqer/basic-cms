@@ -2,15 +2,15 @@
 
 namespace App\Providers\Filament;
 
-class AdminPanelProvider extends BasePanelProvider
+class AuthorPanelProvider extends BasePanelProvider
 {
     protected function getId(): string
     {
-        return 'admin';
+        return 'author';
     }
 
     protected function getPath(): string
     {
-        return 'admin';
+        return 'author';
     }
 }
