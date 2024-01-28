@@ -16,6 +16,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticleResource extends Resource
@@ -42,6 +43,7 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('content')->words(10),
                 Tables\Columns\TextColumn::make('status')->getStateUsing(fn(Model $record) => ArticleStatus::from($record->status)->name),
+                Tables\Columns\TextColumn::make('author.name'),
                 Tables\Columns\TextColumn::make('published_at')->date('Hd/m/y H:i')
             ])
             ->filters([
@@ -67,6 +69,11 @@ class ArticleResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('author');
+    }
+
     public static function getPages(): array
     {
         return [
@@ -82,7 +89,7 @@ class ArticleResource extends Resource
             TextEntry::make('title'),
             TextEntry::make('content'),
             TextEntry::make('status'),
-            TextEntry::make('author_id'),
+            TextEntry::make('author.name'),
             TextEntry::make('published_at'),
         ]);
     }
