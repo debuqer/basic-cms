@@ -8,6 +8,7 @@ use App\Framework\Database\NonIncrementalKey;
 use App\Models\Blog\Article;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class BlogService
@@ -21,6 +22,7 @@ class BlogService
 
     public function createArticle(array $data): Article
     {
+        Gate::allows('create', Article::class);
         Validator::make($data, [
             'title' => ['required', 'string'],
             'content' => ['required', 'string'],
@@ -38,6 +40,7 @@ class BlogService
 
     public function updateArticle(string $id, array $data): Article
     {
+        Gate::allows('update', Article::find($id));
         Validator::make(array_merge($data, ['id' => $id]), [
             'id' => ['required', 'uuid', 'exists:articles,id'],
             'title' => ['required', 'string'],
@@ -49,6 +52,7 @@ class BlogService
 
     public function publishArticle(string $id,): void
     {
+        Gate::allows('publish', Article::find($id));
         Validator::make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -61,6 +65,7 @@ class BlogService
 
     public function draftArticle(string $id,): void
     {
+        Gate::allows('draft', Article::find($id));
         Validator::make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -73,6 +78,7 @@ class BlogService
 
     public function deleteArticle(string $id): bool
     {
+        Gate::allows('softDelete', Article::find($id));
         Validator::make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -82,6 +88,7 @@ class BlogService
 
     public function restoreArticle(string $id): bool
     {
+        Gate::allows('restore', Article::find($id));
         Validator::make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
