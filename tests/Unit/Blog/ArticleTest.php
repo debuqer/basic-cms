@@ -167,4 +167,43 @@ class ArticleTest extends TestCase
         $this->service->restoreArticle($article->id);
     }
 
+    public function test_admin_can_publish_article(): void
+    {
+        $article = Article::factory()->drafted()->createOne();
+        Auth::login($this->admin);
+
+        $this->service->publishArticle($article->id);
+
+        $this->assertEquals(ArticleStatus::Published->value, $article->refresh()->status);
+    }
+
+    public function test_non_privileged_user_cant_publish_article(): void
+    {
+        $this->expectException(UnauthorizedException::class);
+        $article = Article::factory()->drafted()->createOne();
+        Auth::login($this->author);
+
+        $this->service->publishArticle($article->id);
+    }
+
+
+    public function test_admin_can_draft_article(): void
+    {
+        $article = Article::factory()->published()->createOne();
+        Auth::login($this->admin);
+
+        $this->service->draftArticle($article->id);
+
+        $this->assertEquals(ArticleStatus::Draft->value, $article->refresh()->status);
+    }
+
+    public function test_non_privileged_user_cant_draft_article(): void
+    {
+        $this->expectException(UnauthorizedException::class);
+        $article = Article::factory()->published()->createOne();
+        Auth::login($this->author);
+
+        $this->service->draftArticle($article->id);
+    }
+
 }
