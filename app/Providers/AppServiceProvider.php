@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Domain\Blog\BlogRepositoryInterface;
-use App\Framework\Authorization\AuthorizationInterface;
 use App\Framework\Database\NonIncrementalKey;
-use App\Infrastructure\Authorization\AuthorizationService;
 use App\Infrastructure\Database\Persistence\BlogRepository;
 use App\Infrastructure\Database\UUID4KeyGenerator;
+use App\Services\Blog\BlogService;
+use App\Services\Contracts\BlogContract;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Validation\Factory as ValidatorContract;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,9 +19,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(AuthorizationInterface::class, fn($app) => new AuthorizationService(config('permissions', [])));
-        $this->app->bind(NonIncrementalKey::class, UUID4KeyGenerator::class);
         $this->app->bind(BlogRepositoryInterface::class, BlogRepository::class);
+        $this->app->bind(NonIncrementalKey::class, UUID4KeyGenerator::class);
+        $this->app->bind(BlogContract::class, function ($app) {
+            return new BlogService(
+                keyGenerator: $app->make(NonIncrementalKey::class),
+                blogRepository: $app->make(BlogRepositoryInterface::class),
+                gate: $app->make(GateContract::class),
+                validator: $app->make(ValidatorContract::class),
+            );
+        });
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Blog\Tables\Actions;
 
-use App\Services\Blog\BlogService;
+use App\Services\Contracts\BlogContract;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
@@ -33,7 +33,7 @@ class DraftAction extends Action
 
         $this->action(function (): void {
             $this->process(function (array $data, Model $record, Table $table) {
-                App::make(BlogService::class)->draftArticle($record->id);
+                App::make(BlogContract::class)->draftArticle($record->id);
             });
 
             $this->success();

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Blog\ArticleResource\Pages;
 
 use App\Filament\Resources\Blog\ArticleResource;
-use App\Services\Blog\BlogService;
+use App\Services\Contracts\BlogContract;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +24,7 @@ class EditArticle extends EditRecord
     public function handleRecordUpdate(Model $record, array $data): Model
     {
         try {
-            return App::make(BlogService::class)->updateArticle(id: $record->getKey(), data: $data);
+            return App::make(BlogContract::class)->updateArticle(id: $record->getKey(), data: $data);
         } catch (ValidationException $exception) {
             Notification::make()->title($exception->getMessage())->danger()->send()->render();
 

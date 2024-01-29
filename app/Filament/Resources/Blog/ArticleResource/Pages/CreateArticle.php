@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Blog\ArticleResource\Pages;
 
 use App\Filament\Resources\Blog\ArticleResource;
-use App\Services\Blog\BlogService;
+use App\Services\Contracts\BlogContract;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class CreateArticle extends CreateRecord
     public function handleRecordCreation(array $data): Model
     {
         try {
-            return App::make(BlogService::class)->createArticle(data: $data);
+            return App::make(BlogContract::class)->createArticle(data: $data);
         } catch (ValidationException $exception) {
             Notification::make()->title($exception->getMessage())->danger()->send()->render();
 

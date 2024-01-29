@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Blog\Tables\Actions;
 
-use App\Services\Blog\BlogService;
+use App\Services\Contracts\BlogContract;
 use Filament\Actions\Concerns\CanCustomizeProcess;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
@@ -34,7 +33,7 @@ class PublishAction extends Action
 
         $this->action(function (): void {
             $this->process(function (array $data, Model $record, Table $table) {
-                App::make(BlogService::class)->publishArticle($record->id);
+                App::make(BlogContract::class)->publishArticle($record->id);
             });
 
             $this->success();

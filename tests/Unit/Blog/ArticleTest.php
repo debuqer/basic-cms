@@ -6,6 +6,7 @@ use App\Infrastructure\Database\Persistence\BlogRepository;
 use App\Infrastructure\Database\UUID4KeyGenerator;
 use App\Models\User\User;
 use App\Services\Blog\BlogService;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
