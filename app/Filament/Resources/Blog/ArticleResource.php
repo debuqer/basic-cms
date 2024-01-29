@@ -54,6 +54,8 @@ class ArticleResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 PublishAction::make(),
                 DraftAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

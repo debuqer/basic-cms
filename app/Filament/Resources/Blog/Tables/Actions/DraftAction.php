@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Blog\Tables\Actions;
 
 use App\Services\Blog\BlogService;
-use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
@@ -41,7 +40,7 @@ class DraftAction extends Action
         });
 
         $this->visible(static function (Model $record): bool {
-            return $record->published();
+            return ! $record->trashed() and $record->published();
         });
 
         $this->authorize(static fn (Model $record): bool => (Gate::allows('publish', $record)));

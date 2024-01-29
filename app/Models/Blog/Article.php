@@ -4,14 +4,17 @@ namespace App\Models\Blog;
 
 use App\Domain\Blog\Constants\ArticleStatus;
 use App\Framework\Model\Concerns\HasUUIDKey;
+use App\Models\Blog\Concerns\IsArticle;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
     use HasFactory;
     use HasUUIDKey;
+    use SoftDeletes;
 
     protected $fillable = [
         'id',

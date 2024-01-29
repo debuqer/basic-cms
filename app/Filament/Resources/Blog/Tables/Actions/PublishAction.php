@@ -43,7 +43,7 @@ class PublishAction extends Action
         $this->requiresConfirmation();
 
         $this->visible(static function (Model $record): bool {
-            return $record->drafted();
+            return ! $record->trashed() and $record->drafted();
         });
 
 
