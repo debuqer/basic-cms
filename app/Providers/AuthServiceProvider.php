@@ -5,8 +5,10 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use App\Domain\User\Constants\UserRole;
 use App\Models\Blog\Article;
+use App\Models\Blog\Trash;
 use App\Models\User\User;
 use App\Policies\ArticlePolicy;
+use App\Policies\TrashPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,7 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Article::class => ArticlePolicy::class,
+        Trash::class => TrashPolicy::class,
     ];
 
     /**
@@ -26,6 +29,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('publish', [ArticlePolicy::class, 'publish']);
+        Gate::define('publishArticle', [ArticlePolicy::class, 'publish']);
+        Gate::define('draftArticle', [ArticlePolicy::class, 'draft']);
+
+        Gate::define('publishTrash', [TrashPolicy::class, 'publish']);
+        Gate::define('draftTrash', [TrashPolicy::class, 'draft']);
     }
 }

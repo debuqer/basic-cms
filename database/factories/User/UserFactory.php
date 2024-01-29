@@ -43,6 +43,13 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function nonPrivilegedUser(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::None->value,
+        ]);
+    }
+
     public function author(): static
     {
         return $this->state(fn (array $attributes) => [

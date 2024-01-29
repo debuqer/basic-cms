@@ -8,8 +8,8 @@ use App\Infrastructure\Database\Persistence\BlogRepository;
 use App\Infrastructure\Database\UUID4KeyGenerator;
 use App\Services\Blog\BlogService;
 use App\Services\Contracts\BlogContract;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Validation\Factory as ValidatorContract;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
             return new BlogService(
                 keyGenerator: $app->make(NonIncrementalKey::class),
                 blogRepository: $app->make(BlogRepositoryInterface::class),
-                gate: $app->make(GateContract::class),
                 validator: $app->make(ValidatorContract::class),
             );
         });

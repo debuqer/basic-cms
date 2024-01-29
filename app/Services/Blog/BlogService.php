@@ -9,15 +9,14 @@ use App\Models\Blog\Article;
 use App\Services\Contracts\BlogContract;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Validation\Factory as ValidatorContract;
+use Illuminate\Validation\UnauthorizedException;
 
 class BlogService implements BlogContract
 {
     public function __construct(
         protected NonIncrementalKey $keyGenerator,
         protected readonly BlogRepositoryInterface $blogRepository,
-        protected GateContract $gate,
         protected ValidatorContract $validator,
     ) {
 
@@ -25,7 +24,8 @@ class BlogService implements BlogContract
 
     public function createArticle(array $data): Article
     {
-        $this->gate->allows('create', Article::class);
+        throw_if(Auth::user()->cannot('create', Article::class), UnauthorizedException::class);
+
         $this->validator->make($data, [
             'title' => ['required', 'string'],
             'content' => ['required', 'string'],
@@ -43,19 +43,23 @@ class BlogService implements BlogContract
 
     public function updateArticle(string $id, array $data): Article
     {
-        $this->gate->allows('update', Article::find($id));
+        throw_if(Auth::user()->cannot('update', Article::find($id)), UnauthorizedException::class);
+
         $this->validator->make(array_merge($data, ['id' => $id]), [
             'id' => ['required', 'uuid', 'exists:articles,id'],
             'title' => ['required', 'string'],
             'content' => ['required', 'string'],
         ])->validate();
 
+        $data['status'] = ArticleStatus::Draft->value;
+
         return $this->blogRepository->update(id: $id, data: $data);
     }
 
     public function publishArticle(string $id,): void
     {
-        $this->gate->allows('publish', Article::find($id));
+        throw_if(Auth::user()->cannot('publishArticle', Article::find($id)), UnauthorizedException::class);
+
         $this->validator->make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -68,7 +72,8 @@ class BlogService implements BlogContract
 
     public function draftArticle(string $id,): void
     {
-        $this->gate->allows('draft', Article::find($id));
+        throw_if(Auth::user()->cannot('draftArticle', Article::find($id)), UnauthorizedException::class);
+
         $this->validator->make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -81,7 +86,8 @@ class BlogService implements BlogContract
 
     public function deleteArticle(string $id): bool
     {
-        $this->gate->allows('softDelete', Article::find($id));
+        throw_if(Auth::user()->cannot('delete', Article::find($id)), UnauthorizedException::class);
+
         $this->validator->make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
@@ -91,7 +97,8 @@ class BlogService implements BlogContract
 
     public function restoreArticle(string $id): bool
     {
-        $this->gate->allows('restore', Article::find($id));
+        throw_if(Auth::user()->cannot('restore', Article::find($id)), UnauthorizedException::class);
+
         $this->validator->make(['id' => $id], [
             'id' => ['required', 'uuid', 'exists:articles,id'],
         ])->validate();
