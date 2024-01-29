@@ -9,6 +9,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 
@@ -25,9 +26,9 @@ class PublishAction extends Action
     {
         parent::setUp();
 
-        $this->label('Publish');
+        $this->label(__('article.actions.publish'));
 
-        $this->successNotificationTitle(__('filament-actions::edit.single.notifications.saved.title'));
+        $this->successNotificationTitle(__('article.messages.published'));
 
         $this->icon(FilamentIcon::resolve('actions::publish-action') ?? 'heroicon-m-pencil-square');
 
@@ -45,7 +46,6 @@ class PublishAction extends Action
             return ! $record->trashed() and $record->drafted();
         });
 
-
-        $this->authorize(static fn (Model $record): bool => (Gate::allows('publish', $record)));
+        $this->authorize(static fn (Model $record): bool => (Auth::user()->can('publishArticle', $record)));
     }
 }

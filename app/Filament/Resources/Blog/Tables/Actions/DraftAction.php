@@ -9,6 +9,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 
@@ -25,9 +26,9 @@ class DraftAction extends Action
     {
         parent::setUp();
 
-        $this->label('Draft');
+        $this->label(__('article.actions.draft'));
 
-        $this->successNotificationTitle(__('filament-actions::edit.single.notifications.saved.title'));
+        $this->successNotificationTitle(__('article.messages.drafted'));
 
         $this->icon(FilamentIcon::resolve('actions::draft-action') ?? 'heroicon-m-pencil-square');
 
@@ -43,6 +44,6 @@ class DraftAction extends Action
             return ! $record->trashed() and $record->published();
         });
 
-        $this->authorize(static fn (Model $record): bool => (Gate::allows('publish', $record)));
+        $this->authorize(static fn (Model $record): bool => (Auth::user()->can('draftArticle', $record)));
     }
 }

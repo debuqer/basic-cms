@@ -30,8 +30,8 @@ class ArticleResource extends Resource
         return $form
             ->schema([
                 Section::make('Let\'s post something')->schema([
-                    TextInput::make('title')->label('title'),
-                    Textarea::make('content')->label('content'),
+                    TextInput::make('title')->label(__('article.attributes.title')),
+                    Textarea::make('content')->label(__('article.attributes.content')),
                 ]),
             ]);
     }
@@ -40,11 +40,16 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('content')->words(10),
-                Tables\Columns\TextColumn::make('status')->getStateUsing(fn(Model $record) => ArticleStatus::from($record->status)->name),
-                Tables\Columns\TextColumn::make('author.name'),
-                Tables\Columns\TextColumn::make('published_at')->date('d/m/Y H:i')
+                Tables\Columns\TextColumn::make('title')->label(__('article.attributes.title')),
+                Tables\Columns\TextColumn::make('content')->label(__('article.attributes.summarize'))->words(10),
+                Tables\Columns\TextColumn::make('status')->label(__('article.attributes.status'))
+                    ->getStateUsing(fn(Model $record) => __('article.status.'.$record->status))
+                    ->color(fn (string $state): string => match ($state) {
+                        __('article.status.'.ArticleStatus::Draft->value) => 'gray',
+                        __('article.status.'.ArticleStatus::Published->value) => 'success',
+                    }),
+                Tables\Columns\TextColumn::make('author.name')->label(__('article.attributes.author_name')),
+                Tables\Columns\TextColumn::make('published_at')->label(__('article.attributes.published_at'))->date('d/m/Y H:i')
             ])
             ->filters([
                 //
@@ -88,11 +93,16 @@ class ArticleResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            TextEntry::make('title'),
-            TextEntry::make('content'),
-            TextEntry::make('status'),
-            TextEntry::make('author.name'),
-            TextEntry::make('published_at'),
+            TextEntry::make('title')->label(__('article.attributes.title')),
+            TextEntry::make('content')->label(__('article.attributes.content')),
+            TextEntry::make('status')->label(__('article.attributes.status'))
+                ->getStateUsing(fn(Model $record) => __('article.status.'.$record->status))
+                ->color(fn (string $state): string => match ($state) {
+                    __('article.status.'.ArticleStatus::Draft->value) => 'gray',
+                    __('article.status.'.ArticleStatus::Published->value) => 'success',
+                }),
+            TextEntry::make('author.name')->label(__('article.attributes.author_name')),
+            TextEntry::make('published_at')->label(__('article.attributes.published_at'))->date('d/m/Y H:i'),
         ]);
     }
 }
