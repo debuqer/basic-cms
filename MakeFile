@@ -1,3 +1,15 @@
+install:
+	echo "++ installing cms"
+	cat .env.example > .env
+	docker-compose up -d --build
+	docker exec blog_app composer install
+	docker exec blog_app php artisan key:generate
+	docker exec blog_app php artisan migrate:fresh
+	docker exec blog_app php artisan db:seed
+	docker exec blog_app php artisan make:filament-user --name=admin --email=admin@local.dev --password=password
+	docker exec blog_app php artisan make:filament-user --name=author --email=author@local.dev --password=password
+	docker exec blog_app php artisan app:assign-roles-command
+
 build:
 	echo "++ build containers"
 	docker-compose build
@@ -6,12 +18,9 @@ up:
 	echo "++ up containers"
 	docker-compose up
 
-install:
-	echo "++  composer"
-	docker exec blog_app composer install
-
-	echo "++ migrating database"
-	docker exec blog_app php artisan migrate
+down:
+	echo "++ down containers"
+	docker-compose down
 
 
 clean-and-seed:
